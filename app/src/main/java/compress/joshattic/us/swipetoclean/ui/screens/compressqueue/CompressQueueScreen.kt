@@ -60,14 +60,13 @@ fun CompressQueueScreen(
     val scope = rememberCoroutineScope()
     val repository = remember { MediaStoreRepository(context) }
 
-    // Launcher for Android 11+ deletion permission
-    var pendingOriginalUri by remember { mutableStateOf<Uri?>(null) }
+    // Launcher for Android 11+ batch deletion permission
     val deleteLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // Permission granted, original already deleted by system request
-            pendingOriginalUri = null
+            // Permission granted, all originals deleted. 
+            // We can now mark everything as completed if needed or just finish.
         }
     }
 
@@ -84,8 +83,12 @@ fun CompressQueueScreen(
     val compressor = remember { VideoCompressor(context) }
     val currentProgress by compressor.progress.collectAsState()
 
+    // Track original URIs for batch deletion at the end
+    val originalsToDelete = remember { mutableStateListOf<Uri>() }
+
     LaunchedEffect(isCompressing) {
         if (!isCompressing) return@LaunchedEffect
+        originalsToDelete.clear()
         
         for ((index, file) in compressFiles.withIndex()) {
             if (!isCompressing) break
@@ -131,26 +134,8 @@ fun CompressQueueScreen(
                 }
 
                 if (savedUri != null) {
-                    withContext(Dispatchers.IO) {
-                        // Delete the original file to reclaim storage space
-                        try {
-                            val originalUri = Uri.parse(uriStr)
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                                val intentSender = repository.createDeleteRequest(listOf(originalUri))
-                                if (intentSender != null) {
-                                    pendingOriginalUri = originalUri
-                                    deleteLauncher.launch(
-                                        IntentSenderRequest.Builder(intentSender).build()
-                                    )
-                                }
-                            } else {
-                                context.contentResolver.delete(originalUri, null, null)
-                            }
-                        } catch (e: Exception) {
-                            // If deletion fails, we still proceed as the new version is confirmed saved
-                        }
-                    }
-
+                    originalsToDelete.add(Uri.parse(uriStr))
+                    
                     dao.update(
                         file.copy(
                             status = MediaStatus.COMPLETED,
@@ -164,6 +149,28 @@ fun CompressQueueScreen(
 
             } catch (e: Exception) {
                 dao.update(file.copy(status = MediaStatus.PENDING_COMPRESS))
+            }
+        }
+        
+        // --- BATCH DELETION AT THE END ---
+        if (originalsToDelete.isNotEmpty()) {
+            withContext(Dispatchers.IO) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val intentSender = repository.createDeleteRequest(originalsToDelete.toList())
+                        if (intentSender != null) {
+                            deleteLauncher.launch(
+                                IntentSenderRequest.Builder(intentSender).build()
+                            )
+                        }
+                    } else {
+                        originalsToDelete.forEach { uri ->
+                            context.contentResolver.delete(uri, null, null)
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Fail silently or log error
+                }
             }
         }
         

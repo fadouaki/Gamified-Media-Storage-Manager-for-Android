@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Swipe to Clean</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title_1">Swipe to Clean</string>
+    <string name="onboarding_desc_1">Quickly sort through your photos and videos with simple gestures</string>
+    <string name="onboarding_title_2">Swipe Right to Keep</string>
+    <string name="onboarding_desc_2">Keep the photos and videos you want to save</string>
+    <string name="onboarding_title_3">Swipe Left or Up</string>
+    <string name="onboarding_desc_3">Left to trash, up to compress — clean up your storage fast</string>
+    <string name="get_started">Get Started</string>
+    <string name="skip">Skip</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="permission_required">Storage permission is needed to access your photos and videos</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="storage_used">%1$s used of %2$s</string>
+    <string name="space_saved">Space Saved</string>
+    <string name="files_reviewed">Files Reviewed</string>
+    <string name="in_bin">In Bin</string>
+    <string name="start_swiping">Start Swiping</string>
+    <string name="review_bin">Review Bin</string>
+
+    <!-- Swipe Arena -->
+    <string name="keep">Keep</string>
+    <string name="trash">Trash</string>
+    <string name="compress">Compress</string>
+    <string name="undo">Undo</string>
+    <string name="all_done">All done!</string>
+    <string name="all_done_desc">You\'ve reviewed everything in your library</string>
+
+    <!-- Review Bin -->
+    <string name="to_delete">To Delete</string>
+    <string name="to_compress">To Compress</string>
+    <string name="all">All</string>
+    <string name="execute_actions">Execute Actions</string>
+    <string name="restore">Restore</string>
+    <string name="remove">Remove</string>
+    <string name="confirm_execute_title">Confirm Actions</string>
+    <string name="confirm_execute_desc">%1$d files will be deleted and %2$d files will be compressed. This cannot be undone.</string>
+    <string name="confirm_execute_button">Execute</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Compression -->
+    <string name="compression_quality">Compression Quality</string>
+    <string name="high_quality">High Quality</string>
+    <string name="medium_quality">Medium Quality</string>
+    <string name="low_quality">Low Quality</string>
+</resources>

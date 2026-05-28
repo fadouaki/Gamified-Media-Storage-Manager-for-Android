@@ -1,0 +1,46 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+build/
+**/build/
+captures/
+.externalNativeBuild
+.cxx
+local.properties
+*.apk
+*.aab
+*.dm
+*.log
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.ipr
+*.iws
+
+# Gradle
+.gradle/
+build/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log Files
+*.log
+
+# Android Studio captures
+captures/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Kotlin
+*.kotlin_module
+.kotlin/
